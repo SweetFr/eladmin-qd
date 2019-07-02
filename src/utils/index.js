@@ -15,7 +15,7 @@ export function parseTime(time) {
     var minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
     var seconds = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
     // 拼接
-    return year + '年' + month + '月' + day + '日 ' + hours + ':' + minutes + ':' + seconds
+    return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds
   } else {
     return ''
   }
@@ -115,4 +115,35 @@ export function regMobile(mobile) {
     var new_mobile = mobile.substr(0, 3) + '****' + mobile.substr(7)
   }
   return new_mobile
+}
+
+/**
+ * Check if an element has a class
+ * @param {HTMLElement} elm
+ * @param {string} cls
+ * @returns {boolean}
+ */
+export function hasClass(ele, cls) {
+  return !!ele.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'))
+}
+
+/**
+ * Add class to element
+ * @param {HTMLElement} elm
+ * @param {string} cls
+ */
+export function addClass(ele, cls) {
+  if (!hasClass(ele, cls)) ele.className += ' ' + cls
+}
+
+/**
+ * Remove class from element
+ * @param {HTMLElement} elm
+ * @param {string} cls
+ */
+export function removeClass(ele, cls) {
+  if (hasClass(ele, cls)) {
+    const reg = new RegExp('(\\s|^)' + cls + '(\\s|$)')
+    ele.className = ele.className.replace(reg, ' ')
+  }
 }

@@ -1,7 +1,6 @@
 <template>
   <div style="display: inline-block">
-    <el-button size="mini" class="button" type="info" @click="dialog = true">修改</el-button>
-    <el-dialog :visible.sync="dialog" :title="title" width="500px" @close="cancel">
+    <el-dialog :visible.sync="dialog" :close-on-click-modal="false" :title="title" append-to-body width="500px" @close="cancel">
       <el-form ref="form" :model="form" :rules="rules" size="small" label-width="88px">
         <el-form-item label="旧密码" prop="oldPass">
           <el-input v-model="form.oldPass" type="password" auto-complete="on" style="width: 370px;"/>
@@ -23,31 +22,25 @@
 
 <script>
 import store from '@/store'
-import { md5 } from '@/utils/md5'
-import { validPass, updatePass } from '@/api/user'
+import { updatePass } from '@/api/user'
 export default {
   data() {
-    const validatePass = (rule, value, callback) => {
-      validPass(md5(value)).then(res => {
-        if (res.status === 200) {
-          callback()
-        } else {
-          callback(new Error('旧密码错误，请检查'))
-        }
-      })
-    }
     const confirmPass = (rule, value, callback) => {
-      if (this.form.newPass !== value) {
-        callback(new Error('两次输入的密码不一致'))
+      if (value) {
+        if (this.form.newPass !== value) {
+          callback(new Error('两次输入的密码不一致'))
+        } else {
+          callback()
+        }
       } else {
-        callback()
+        callback(new Error('请再次输入密码'))
       }
     }
     return {
       loading: false, dialog: false, title: '修改密码', form: { oldPass: '', newPass: '', confirmPass: '' },
       rules: {
         oldPass: [
-          { required: true, validator: validatePass, trigger: 'blur' }
+          { required: true, message: '请输入旧密码', trigger: 'blur' }
         ],
         newPass: [
           { required: true, message: '请输入新密码', trigger: 'blur' },
@@ -67,7 +60,7 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.loading = true
-          updatePass(md5(this.form.confirmPass)).then(res => {
+          updatePass(this.form.confirmPass).then(res => {
             this.resetForm()
             this.$notify({
               title: '密码修改成功，请重新登录',
