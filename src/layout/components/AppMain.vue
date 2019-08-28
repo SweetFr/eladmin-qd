@@ -1,26 +1,21 @@
 <template>
-  <div>
-    <section class="app-main">
-      <!--<CodeFund />-->
-      <transition name="fade-transform" mode="out-in">
-        <keep-alive :include="cachedViews">
-          <router-view :key="key"/>
-        </keep-alive>
-      </transition>
-    </section>
+  <section class="app-main">
+    <transition name="fade-transform" mode="out-in">
+      <keep-alive :include="cachedViews">
+        <router-view :key="key"/>
+      </keep-alive>
+    </transition>
     <div v-if="$store.state.settings.showFooter" id="el-main-footer">
       <span v-html="$store.state.settings.footerTxt"/>
       <span> ⋅ </span>
       <a href="http://www.beian.miit.gov.cn" target="_blank">{{ $store.state.settings.caseNumber }}</a>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
-// import CodeFund from '@/components/CodeFund'
 export default {
   name: 'AppMain',
-  // components: { CodeFund },
   computed: {
     cachedViews() {
       return this.$store.state.tagsView.cachedViews
@@ -39,8 +34,8 @@ export default {
     min-height: calc(100vh - 84px);
     width: 100%;
     position: relative;
-    padding-bottom: 18px;
     overflow: hidden;
+    padding-bottom: 12px;
   }
 
   .fixed-header+.app-main {
@@ -48,13 +43,13 @@ export default {
   }
 
   .hasTagsView {
-  .app-main {
-    min-height: calc(100vh - 84px);
-  }
+    .app-main {
+      min-height: calc(100vh - 84px);
+    }
 
-  .fixed-header+.app-main {
-    padding-top: 85px;
-  }
+    .fixed-header+.app-main {
+      padding-top: 85px;
+    }
   }
 </style>
 
